@@ -32,7 +32,7 @@ docker compose exec backend bash
 
 ### **5️⃣ Run the Script Manually (If Needed)**  
 ```bash
-python budget_tracker/main.py
+python main.py
 ```
 
 ---
