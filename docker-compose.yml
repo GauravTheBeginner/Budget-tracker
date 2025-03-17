@@ -1,0 +1,49 @@
+volumes:
+  backend-data:
+  grafana-data:
+  pg_data:
+
+services:
+  backend:
+    env_file:
+      - ./.env
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./:/app/
+      - backend-data:/data
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    command:  sleep infinity
+    networks:
+      - budget_tracker
+  
+  postgres:
+    image: postgres:17.1
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: budget_tracker
+    ports:
+      - "5436:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - budget_tracker
+  
+  # grafana:
+  #   build:
+  #     context: ./grafana
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - grafana-data:/var/lib/grafana
+  #     - ./grafana/grafana.ini:/etc/grafana/grafana.ini  # Mount the custom grafana.ini
+  #   networks:
+  #     - budget_tracker
+
+networks:
+  budget_tracker:
+    driver: bridge
