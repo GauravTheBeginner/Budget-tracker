@@ -1,4 +1,4 @@
-### **📘 Budget Tracker **  
+### **📘 Budget Tracker**  
 
 ## **📌 Project Summary**  
 **Budget Tracker** is a cost-tracking and reporting system that extracts, processes, and loads cloud billing data from multiple providers like **AWS, Azure, GCP, and RN**. The system generates fake cost data, processes it into structured formats, and loads it into a database for further analysis.  
