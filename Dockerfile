@@ -2,7 +2,7 @@
 FROM python:3.10
 
 # Set the working directory
-WORKDIR /app/budget_tracker
+WORKDIR /app
 
 # Add the contents of the current directory to /app
 ADD . /app/
@@ -51,8 +51,6 @@ RUN apt-get update && \
 
 # Install Python dependencies
 COPY requirements.txt /app/requirements.txt
-RUN python3 -m venv /app/venv && \
-    /app/venv/bin/pip install --no-cache-dir -r /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
     
 # Set environment variables from .env (assuming .env file exists in /app)

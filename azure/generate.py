@@ -3,11 +3,13 @@ from datetime import datetime, timedelta
 import pandas as pd
 import random
 import time
+from lib.consts import USAGE_FAM_MAPPING
 from lib.faker_helper import FakerClient 
 
 class AzureExtractor:
     def __init__(self, date):
         self.date = date
+        self.service_names = list(USAGE_FAM_MAPPING.keys()) 
 
     def get_subscriptions(self):
         """Generate fake subscription data."""
@@ -18,7 +20,11 @@ class AzureExtractor:
             }
             for _ in range(5)
         ]
-
+    def get_random_service(self):
+        """Returns a random Azure service and its usage family."""
+        service_name = random.choice(self.service_names)
+        return service_name
+    
     def get_cost_data(self, subscription_id):
         """Generate fake cost data for a subscription."""
         data = []
@@ -29,7 +35,7 @@ class AzureExtractor:
                 self.date.strftime("%Y-%m-%d"),           # Invoice Date
                 subscription_id,                          # Account Number
                 FakerClient.get_random_company(),         # Account Name
-                FakerClient.faker.word(),                 # Service Name
+                self.get_random_service(),                # Service Name
                 FakerClient.faker.city(),                 # Resource Location
                 FakerClient.faker.word(),                 # Meter
                 FakerClient.faker.word(),                 # Meter Category
@@ -63,5 +69,4 @@ class AzureExtractor:
             time.sleep(1)  
         
         df = pd.DataFrame(data, columns=columns)
-        print(df)
         return df

@@ -32,17 +32,23 @@ services:
     networks:
       - budget_tracker
   
-  # grafana:
-  #   build:
-  #     context: ./grafana
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - grafana-data:/var/lib/grafana
-  #     - ./grafana/grafana.ini:/etc/grafana/grafana.ini  # Mount the custom grafana.ini
-  #   networks:
-  #     - budget_tracker
+  grafana:
+    image: grafana/grafana:latest
+    restart: unless-stopped
+      # build:
+      # context: ./grafana
+      # dockerfile: Dockerfile
+
+    # build:
+      # context: ./grafana
+      # dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      # - ./grafana/grafana.ini:/etc/grafana/grafana.ini  # Mount the custom grafana.ini
+    networks:
+      - budget_tracker
 
 networks:
   budget_tracker:
