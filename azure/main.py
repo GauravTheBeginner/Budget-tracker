@@ -8,6 +8,6 @@ class Azure:
     def process_operations(self):
         azure_extractor = AzureExtractor(self.date)
         results = azure_extractor.extract_data()
-        # print(results)
+        print(results)
         azure_loader = AzureLoader(results)
         azure_loader.load_data()

@@ -3,13 +3,17 @@ from datetime import datetime, timedelta
 import pandas as pd
 import random
 import time
-from lib.consts import USAGE_FAM_MAPPING
+from lib.consts import USAGE_FAM_MAPPING, RESOURCE_MAPPING, METER_SUB_CATEGORY, RESOURCE_LOCATION_MAPPING, METER_CATEGORY_MAPPING
 from lib.faker_helper import FakerClient 
 
 class AzureExtractor:
     def __init__(self, date):
         self.date = date
         self.service_names = list(USAGE_FAM_MAPPING.keys()) 
+        self.resource_type = list(RESOURCE_MAPPING.keys())
+        self.meter_sub_category = list(METER_SUB_CATEGORY.keys())
+        self.resource_location_mapping = list(RESOURCE_LOCATION_MAPPING.keys())
+        self.meter_category = list(METER_CATEGORY_MAPPING.keys())
 
     def get_subscriptions(self):
         """Generate fake subscription data."""
@@ -24,7 +28,19 @@ class AzureExtractor:
         """Returns a random Azure service and its usage family."""
         service_name = random.choice(self.service_names)
         return service_name
-    
+    def get_random_resource_type(self):
+        """Returns a random Azure resource type."""
+        return random.choice(self.resource_type)
+    def get_random_meter_sub_category(self):
+        """Returns a random Azure meter sub category."""
+        return random.choice(self.meter_sub_category)
+    def get_random_resource_location(self):
+        """Returns a random Azure resource location."""
+        return random.choice(self.resource_location_mapping)
+    def get_meter_category(self):
+        """Returns a random Azure meter category."""
+        return random.choice(self.meter_category)
+
     def get_cost_data(self, subscription_id):
         """Generate fake cost data for a subscription."""
         data = []
@@ -36,11 +52,11 @@ class AzureExtractor:
                 subscription_id,                          # Account Number
                 FakerClient.get_random_company(),         # Account Name
                 self.get_random_service(),                # Service Name
-                FakerClient.faker.city(),                 # Resource Location
+                self.get_random_resource_location(),                # Resource Location
                 FakerClient.faker.word(),                 # Meter
-                FakerClient.faker.word(),                 # Meter Category
-                FakerClient.faker.word(),                 # Meter Sub Category
-                FakerClient.faker.word(),                 # Resource Type
+                self.get_meter_category(),                # Meter Category
+                self.get_random_meter_sub_category(),                 # Meter Sub Category
+                self.get_random_resource_type(),            # Resource Type
                 FakerClient.faker.word()                  # Resource Group
             ]
             data.append(row)

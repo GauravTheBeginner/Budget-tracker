@@ -2,12 +2,19 @@ import random
 import datetime
 import pandas as pd
 from lib.faker_helper import FakerClient  
+from lib.consts import RN_ACCOUNT_MAPPING, PRODUCT_NAME
 
 class RNGenerator:
     def __init__(self, date):
         self.date = date
         self.fake = FakerClient()
+        self.RN_ACCOUNT_MAPPING = list(RN_ACCOUNT_MAPPING.keys())
+        self.PRODUCT_NAME = list(PRODUCT_NAME.keys())
 
+    def get_random_account_name(self):
+        """Returns a random Azure resource type."""
+        return random.choice(self.RN_ACCOUNT_MAPPING)
+    
     def generate_data(self, days):
         """Generate random RN cloud billing data for the given number of days."""
         data = []
@@ -30,20 +37,21 @@ class RNGenerator:
                     "MonthYear": month_year_timestamp,  
                     "BlendedRate": round(random.uniform(0.01, 1.0), 4),
                     "SellerOfRecord": FakerClient.get_random_company(),
-                    "Environment": random.choice(["Production", "Staging", "Development"]),
-                    "UnitOfMeasure": random.choice(["GB", "TB", "Hours"]),
-                    "CurrencyCode": random.choice(["USD", "EUR", "INR"]),
+                    "Environment": random.choice(["Centos 5.7", "Debian Linux x86_64"]),
+                    "UnitOfMeasure": random.choice(["GiB", "Mbps", "Other", "Server"]),
+                    "CurrencyCode": random.choice(["USD"]),
                     "user:termstartdate": (daily_date - datetime.timedelta(days=random.randint(1, 30))).strftime("%Y-%m-%d"),
                     "user:termenddate": (daily_date + datetime.timedelta(days=random.randint(30, 365))).strftime("%Y-%m-%d"),
                     "InvoiceID": random.randint(100000, 999999),
-                    "Business Unit": random.choice(["CloudOps", "Finance", "Marketing"]),
-                    "LinkedAccountName": FakerClient.get_random_company(),
+                    "Business Unit": random.choice(["COSE", "Data Services", "Freesites","Games", "Infrastructure", "Payments", "Paysites"]),
+                    "LinkedAccountName": self.get_random_account_name(),
+                    "LinkedAccountId": random.randint(1000, 9999),
                     "ProductCode": f"RN-{random.randint(1000, 9999)}",
-                    "ProductName": FakerClient.faker.word(),
+                    "ProductName": random.choice(self.PRODUCT_NAME),
                     "ResourceId": FakerClient.get_random_account_number(),
                     "UsageType": FakerClient.faker.word(),
                     "ItemDescription": FakerClient.faker.sentence(),
-                    "AvailabilityZone": random.choice(["us-east-1a", "us-west-2b", "eu-central-1c"]),
+                    "AvailabilityZone": random.choice(["AMS10","ORD7","PAR2"]),
                     "Cost": cost,
                     "Usage Amount": usage_amount
                 }

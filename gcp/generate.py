@@ -1,12 +1,16 @@
 import random
 import datetime
 from lib.faker_helper import FakerClient
-from lib.consts import GCP_USAGE_UNITS, GCP_REGIONS, GCP_COUNTRIES, GCP_SELLERS
+from lib.consts import GCP_REGIONS, GCP_COUNTRIES, GCP_SELLERS, PROJECT_NAME_MAPPING
 
 class GCPGenerator:
     def __init__(self, date):
         self.date = date
         self.fake = FakerClient()
+        self.regions = list(GCP_REGIONS.keys()) 
+        self.country = list(GCP_COUNTRIES.keys())
+        self.seller = list(GCP_SELLERS.keys())
+        self.project_name = list(PROJECT_NAME_MAPPING.keys())
 
     def generate_sku(self):
         """Generate a random SKU ID and description."""
@@ -26,12 +30,12 @@ class GCPGenerator:
             
             while len(daily_data) < 50 or total_cost < 5000:
                 sku_id, sku_description = self.generate_sku()
-                usage_unit = random.choice(GCP_USAGE_UNITS)
-                region = random.choice([r for regions in GCP_REGIONS.values() for r in regions])
-                country = random.choice(GCP_COUNTRIES)
-                seller = random.choice(GCP_SELLERS)
+                usage_unit = random.randint(1, 100000)
+                region = random.choice(self.regions)
+                country = random.choice(self.country)
+                seller = random.choice(self.seller)
                 project_id = f"proj-{random.randint(1000, 9999)}"
-                project_name = self.fake.faker.company()
+                project_name = random.choice(self.project_name)
                 account_number = FakerClient.get_random_account_number()
 
                 usage_amount = FakerClient.get_random_usage(1, 500)
