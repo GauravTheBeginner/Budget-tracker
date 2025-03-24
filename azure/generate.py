@@ -1,15 +1,18 @@
-from faker import Faker
 from datetime import datetime, timedelta
 import pandas as pd
 import random
 import time
-from lib.consts import USAGE_FAM_MAPPING, RESOURCE_MAPPING, METER_SUB_CATEGORY, RESOURCE_LOCATION_MAPPING, METER_CATEGORY_MAPPING
+from lib.consts import (
+    USAGE_FAM_MAPPING, RESOURCE_MAPPING, METER_SUB_CATEGORY, 
+    RESOURCE_LOCATION_MAPPING, METER_CATEGORY_MAPPING
+)
 from lib.faker_helper import FakerClient 
 
 class AzureExtractor:
-    def __init__(self, date):
+    def __init__(self, date: datetime.date):
+        """Initialize with a datetime.date object."""
         self.date = date
-        self.service_names = list(USAGE_FAM_MAPPING.keys()) 
+        self.service_names = list(USAGE_FAM_MAPPING.keys())
         self.resource_type = list(RESOURCE_MAPPING.keys())
         self.meter_sub_category = list(METER_SUB_CATEGORY.keys())
         self.resource_location_mapping = list(RESOURCE_LOCATION_MAPPING.keys())
@@ -24,65 +27,76 @@ class AzureExtractor:
             }
             for _ in range(5)
         ]
+
     def get_random_service(self):
-        """Returns a random Azure service and its usage family."""
-        service_name = random.choice(self.service_names)
-        return service_name
+        """Returns a random Azure service."""
+        return random.choice(self.service_names)
+
     def get_random_resource_type(self):
         """Returns a random Azure resource type."""
         return random.choice(self.resource_type)
+
     def get_random_meter_sub_category(self):
         """Returns a random Azure meter sub category."""
         return random.choice(self.meter_sub_category)
+
     def get_random_resource_location(self):
         """Returns a random Azure resource location."""
         return random.choice(self.resource_location_mapping)
+
     def get_meter_category(self):
         """Returns a random Azure meter category."""
         return random.choice(self.meter_category)
 
-    def get_cost_data(self, subscription_id):
-        """Generate fake cost data for a subscription."""
+    def get_cost_data(self, subscription_id, days: int):
+        """Generate fake cost data for a subscription over multiple days."""
         data = []
-        for _ in range(random.randint(5, 10)): 
-            row = [
-                FakerClient.get_random_cost(10, 500),     # Cost
-                FakerClient.get_random_usage(1, 100),     # Usage Quantity
-                self.date.strftime("%Y-%m-%d"),           # Invoice Date
-                subscription_id,                          # Account Number
-                FakerClient.get_random_company(),         # Account Name
-                self.get_random_service(),                # Service Name
-                self.get_random_resource_location(),                # Resource Location
-                FakerClient.faker.word(),                 # Meter
-                self.get_meter_category(),                # Meter Category
-                self.get_random_meter_sub_category(),                 # Meter Sub Category
-                self.get_random_resource_type(),            # Resource Type
-                FakerClient.faker.word()                  # Resource Group
-            ]
-            data.append(row)
+
+        for i in range(days):
+            daily_date = self.date - timedelta(days=i) 
+
+            for _ in range(random.randint(5, 10)):
+                row = [
+                    FakerClient.get_random_cost(10, 500),         # Cost
+                    FakerClient.get_random_usage(1, 100),         # Usage Quantity
+                    daily_date.strftime("%Y-%m-%d"),              # Invoice Date
+                    subscription_id,                              # Account Number
+                    FakerClient.get_random_company(),             # Account Name
+                    self.get_random_service(),                    # Service Name
+                    self.get_random_resource_location(),          # Resource Location
+                    FakerClient.faker.word(),                     # Meter
+                    self.get_meter_category(),                    # Meter Category
+                    self.get_random_meter_sub_category(),         # Meter Sub Category
+                    self.get_random_resource_type(),              # Resource Type
+                    FakerClient.faker.word()                      # Resource Group
+                ]
+                data.append(row)
+
         return data
 
-    def extract_data(self):
-        """Extract fake cost data for all subscriptions."""
+    def extract_data(self, days: int = 1):
+        """Extract fake cost data for all subscriptions over multiple days."""
         columns = [
-            "Cost", "Usage Quantity", "Invoice Date", "Account Number", "Account Name", 
-            "Service Name", "Resource Location", "Meter", "Meter Category", "Meter Sub Category", 
-            "Resource Type", "Resource Group"
+            "Cost", "Usage Quantity", "Invoice Date", "Account Number", "Account Name",
+            "Service Name", "Resource Location", "Meter", "Meter Category",
+            "Meter Sub Category", "Resource Type", "Resource Group"
         ]
         data = []
-        
+
         subscriptions = self.get_subscriptions()
-        print(f"Generated {len(subscriptions)} subscriptions.")
-        
+        print(f"✅ Generated {len(subscriptions)} subscriptions.")
+
         for idx, sub in enumerate(subscriptions):
-            print(f"Processing subscription {idx + 1}/{len(subscriptions)}: {sub['subscription_id']}")
-            rows = self.get_cost_data(sub['subscription_id'])
+            print(f"🚀 Processing subscription {idx + 1}/{len(subscriptions)}: {sub['subscription_id']}")
+            
+            rows = self.get_cost_data(sub['subscription_id'], days)
 
             for row in rows:
-                row[4] = row[4].split("(")[0].strip()  
+                row[4] = row[4].split("(")[0].strip()
                 data.append(row)
-            
-            time.sleep(1)  
-        
+
+            time.sleep(1) 
+
         df = pd.DataFrame(data, columns=columns)
+        print(f"✅ Generated {len(df)} records over {days} days.")
         return df

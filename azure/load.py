@@ -1,5 +1,6 @@
 import pandas as pd
 from lib.db_helper import load_df_to_table
+from summary.load import SummaryTableLoader
 
 class AzureLoader:
     def __init__(self, data):
@@ -49,3 +50,21 @@ class AzureLoader:
 
         load_df_to_table("historical_azure", df)
         print("✅ Azure data loaded successfully!")
+        azure_df = df.copy()
+        
+        # Convert 'Invoice Date' to datetime format
+        azure_df["Invoice Date"] = pd.to_datetime(azure_df["Invoice Date"])
+        
+        # Drop unwanted columns
+        azure_df = azure_df[[
+            "Account Number", "Account Name", "Invoice Date", 
+            "Service Name", "Cost", "Usage Quantity"
+        ]]
+
+        # Add/Modify necessary columns
+        azure_df["Vendor"] = "Azure"
+        azure_df["Usage Family"] = azure_df["Service Name"]
+
+        # Load the data to the Summary Table
+        summary_loader = SummaryTableLoader(azure_df)
+        summary_loader.load_data()
