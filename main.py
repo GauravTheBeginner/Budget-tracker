@@ -4,6 +4,7 @@ from aws.main import AWS
 from gcp.main import GCP
 from azure.main import Azure
 from rn.main import RN
+from precomputation.main import PrecomputedTable
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
@@ -16,7 +17,8 @@ class CloudDataProcessor:
             ("AWS", lambda: AWS(self.date)),
             ("Azure", lambda: Azure(self.date)),
             ("GCP", lambda: GCP(self.date)),
-             ("RN", lambda: RN(self.date)),
+            ("RN", lambda: RN(self.date)),
+            ("Precomputation", PrecomputedTable)
         ]
         self.errors = []
 
