@@ -1,7 +1,9 @@
-import random
 import datetime
-from lib.faker_helper import FakerClient  
-from lib.consts import RN_ACCOUNT_MAPPING, PRODUCT_NAME
+import random
+
+from lib.consts import PRODUCT_NAME, RN_ACCOUNT_MAPPING
+from lib.faker_helper import FakerClient
+
 
 class RNGenerator:
     def __init__(self, date: datetime.date):
@@ -20,8 +22,8 @@ class RNGenerator:
         data = []
 
         for i in range(days):
-            daily_date = self.date - datetime.timedelta(days=i) 
-            month_year_timestamp = datetime.datetime(daily_date.year, daily_date.month, 1)  
+            daily_date = self.date - datetime.timedelta(days=i)
+            month_year_timestamp = datetime.datetime(daily_date.year, daily_date.month, 1)
 
             daily_data, total_cost = [], 0
 
@@ -32,16 +34,22 @@ class RNGenerator:
 
                 row = {
                     "UsageEndDate": daily_date.strftime("%Y-%m-%d"),
-                    "MonthYear": month_year_timestamp.strftime("%Y-%m-%d"),  
+                    "MonthYear": month_year_timestamp.strftime("%Y-%m-%d"),
                     "BlendedRate": round(random.uniform(0.01, 1.0), 4),
                     "SellerOfRecord": self.fake.get_random_company(),
                     "Environment": random.choice(["Centos 5.7", "Debian Linux x86_64"]),
                     "UnitOfMeasure": random.choice(["GiB", "Mbps", "Other", "Server"]),
                     "CurrencyCode": random.choice(["USD"]),
-                    "user:termstartdate": (daily_date - datetime.timedelta(days=random.randint(1, 30))).strftime("%Y-%m-%d"),
-                    "user:termenddate": (daily_date + datetime.timedelta(days=random.randint(30, 365))).strftime("%Y-%m-%d"),
+                    "user:termstartdate": (
+                        daily_date - datetime.timedelta(days=random.randint(1, 30))
+                    ).strftime("%Y-%m-%d"),
+                    "user:termenddate": (
+                        daily_date + datetime.timedelta(days=random.randint(30, 365))
+                    ).strftime("%Y-%m-%d"),
                     "InvoiceID": random.randint(100000, 999999),
-                    "Business Unit": random.choice(["COSE", "Data Services", "Freesites", "Games", "Infrastructure", "Payments", "Paysites"]),
+                    "Business Unit": random.choice(
+                        ["COSE", "Data Services", "Freesites", "Games", "Infrastructure", "Payments", "Paysites"]
+                    ),
                     "LinkedAccountName": self.get_random_account_name(),
                     "LinkedAccountId": random.randint(1000, 9999),
                     "ProductCode": f"RN-{random.randint(1000, 9999)}",
@@ -56,7 +64,7 @@ class RNGenerator:
                 daily_data.append(row)
 
                 if total_cost >= 8000:
-                    break 
+                    break
 
             data.extend(daily_data)
 

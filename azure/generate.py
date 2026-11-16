@@ -1,12 +1,18 @@
-from datetime import datetime, timedelta
-import pandas as pd
 import random
 import time
+from datetime import datetime, timedelta
+
+import pandas as pd
+
 from lib.consts import (
-    USAGE_FAM_MAPPING, RESOURCE_MAPPING, METER_SUB_CATEGORY, 
-    RESOURCE_LOCATION_MAPPING, METER_CATEGORY_MAPPING
+    METER_CATEGORY_MAPPING,
+    METER_SUB_CATEGORY,
+    RESOURCE_LOCATION_MAPPING,
+    RESOURCE_MAPPING,
+    USAGE_FAM_MAPPING,
 )
-from lib.faker_helper import FakerClient 
+from lib.faker_helper import FakerClient
+
 
 class AzureExtractor:
     def __init__(self, date: datetime.date):
@@ -53,7 +59,7 @@ class AzureExtractor:
         data = []
 
         for i in range(days):
-            daily_date = self.date - timedelta(days=i) 
+            daily_date = self.date - timedelta(days=i)
 
             for _ in range(random.randint(5, 10)):
                 row = [
@@ -88,14 +94,14 @@ class AzureExtractor:
 
         for idx, sub in enumerate(subscriptions):
             print(f"🚀 Processing subscription {idx + 1}/{len(subscriptions)}: {sub['subscription_id']}")
-            
+
             rows = self.get_cost_data(sub['subscription_id'], days)
 
             for row in rows:
                 row[4] = row[4].split("(")[0].strip()
                 data.append(row)
 
-            time.sleep(1) 
+            time.sleep(1)
 
         df = pd.DataFrame(data, columns=columns)
         print(f"✅ Generated {len(df)} records over {days} days.")

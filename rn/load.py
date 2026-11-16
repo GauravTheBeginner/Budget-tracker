@@ -1,5 +1,7 @@
 import pandas as pd
+
 from lib.db_helper import load_df_to_table
+
 
 class RNLoader:
     def __init__(self, data):
@@ -15,7 +17,7 @@ class RNLoader:
             df["UsageEndDate"] = pd.to_datetime(df["UsageEndDate"])
 
         if "MonthYear" in df.columns:
-            df["MonthYear"] = pd.to_datetime(df["MonthYear"])  
+            df["MonthYear"] = pd.to_datetime(df["MonthYear"])
 
         for col in ["Cost", "Usage Amount", "BlendedRate"]:
             if col in df.columns:

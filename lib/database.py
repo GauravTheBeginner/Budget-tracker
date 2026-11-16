@@ -1,9 +1,10 @@
-import os
 import logging
+import os
+from urllib.parse import quote_plus
+
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from urllib.parse import quote_plus
-from dotenv import load_dotenv 
 
 load_dotenv()
 
@@ -48,11 +49,11 @@ class DatabaseHelper:
         try:
             engine = create_engine(
                 f'postgresql+psycopg2://{db_username}:{db_password}@{db_endpoint}:{db_port}/{db_name}',
-                echo=False  
+                echo=False
             )
 
             return engine
         except Exception as e:
             logging.error(f"Error creating the database engine: {e}")
             return None
-        
+

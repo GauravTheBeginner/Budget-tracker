@@ -1,7 +1,9 @@
-import random
 import datetime
+import random
+
+from lib.consts import GCP_COUNTRIES, GCP_REGIONS, GCP_SELLERS, PROJECT_NAME_MAPPING
 from lib.faker_helper import FakerClient
-from lib.consts import GCP_REGIONS, GCP_COUNTRIES, GCP_SELLERS, PROJECT_NAME_MAPPING
+
 
 class GCPGenerator:
     def __init__(self, date: datetime.date):
@@ -24,7 +26,7 @@ class GCPGenerator:
         data = []
 
         for i in range(days):
-            daily_date = self.date - datetime.timedelta(days=i) 
+            daily_date = self.date - datetime.timedelta(days=i)
             daily_data, total_cost = [], 0
 
             while len(daily_data) < 50 or total_cost < 5000:
@@ -42,7 +44,7 @@ class GCPGenerator:
                 total_cost += cost
 
                 row = {
-                    "Invoice Date": daily_date.strftime("%Y-%m-%d"), 
+                    "Invoice Date": daily_date.strftime("%Y-%m-%d"),
                     "Usage Unit": usage_unit,
                     "Usage Amount": usage_amount,
                     "Cost": cost,
@@ -60,7 +62,7 @@ class GCPGenerator:
                 daily_data.append(row)
 
                 if total_cost >= 8000:
-                    break  
+                    break
 
             data.extend(daily_data)
 

@@ -1,5 +1,5 @@
-from aws.load import AWSLoader
 from aws.generate import AWSGenerator
+from aws.load import AWSLoader
 
 
 class AWS:

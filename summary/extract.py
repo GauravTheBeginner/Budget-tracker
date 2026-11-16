@@ -1,5 +1,7 @@
 import pandas as pd
+
 from lib.database import DatabaseHelper
+
 
 class SummaryTableExtractor:
     def __init__(self):
@@ -8,7 +10,6 @@ class SummaryTableExtractor:
     def extract_data(self):
         gcp_query = "SELECT * FROM gcp;"
         aws_query = "SELECT * FROM historical_aws;"
-        azure_query = "SELECT * FROM historical_azure;"
 
         with DatabaseHelper() as db:
             # Fetch data from GCP table
@@ -16,9 +17,6 @@ class SummaryTableExtractor:
 
             # Fetch data from historical AWS table
             aws_df = pd.read_sql(aws_query, db.engine)
-
-            # Fetch data from historical Azure table
-            azure_df = pd.read_sql(azure_query, db.engine)
 
             gcp_df = gcp_df.rename(
                 columns={

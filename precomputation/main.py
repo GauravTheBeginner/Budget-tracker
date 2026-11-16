@@ -1,5 +1,5 @@
-from precomputation.database_queries import DatabaseQueries
 from lib.database import DatabaseHelper
+from precomputation.database_queries import DatabaseQueries
 
 
 class PrecomputedTable:
@@ -15,4 +15,4 @@ class PrecomputedTable:
             db_queries.create_monthly_estimated_spend()
             db_queries.create_top_spending_drivers()
             db_queries.create_daily_compute_usage_cost_trend()
-            
+

@@ -1,6 +1,8 @@
 import pandas as pd
+
 from lib.db_helper import load_df_to_table
-from summary.load import SummaryTableLoader  
+from summary.load import SummaryTableLoader
+
 
 class GCPLoader:
     def __init__(self, data):
@@ -15,7 +17,7 @@ class GCPLoader:
 
         if "Invoice Date" in df.columns:
             df["Invoice Date"] = pd.to_datetime(df["Invoice Date"])
-        
+
         for col in ["Cost", "Usage Amount"]:
             if col in df.columns:
                 df[col] = df[col].astype(float)

@@ -1,5 +1,7 @@
-from lib.db_helper import load_df_to_table
 import pandas as pd
+
+from lib.db_helper import load_df_to_table
+
 
 class DatabaseQueries:
 
@@ -8,16 +10,16 @@ class DatabaseQueries:
 
     def create_total_spent_by_account_table(self):
         query = """
-        SELECT 
+        SELECT
             "Account Name",
             "Vendor",
             SUM("Cost") AS "Cost (Total)"
-        FROM 
+        FROM
             summary_table
-        GROUP BY 
-            "Account Name", 
+        GROUP BY
+            "Account Name",
             "Vendor"
-        ORDER BY 
+        ORDER BY
             SUM("Cost") DESC;
         """
         df = pd.read_sql(query, self.db_engine)
@@ -26,11 +28,11 @@ class DatabaseQueries:
     def create_daily_usage_cost_by_vendor(self):
         query = """
         SELECT
-            "Invoice Date"::date AS "Date", 
+            "Invoice Date"::date AS "Date",
             "Vendor",
             SUM("Cost") AS "DailyCost"
-        FROM 
-            summary_table 
+        FROM
+            summary_table
         WHERE
             "Invoice Date"::date >= current_date - interval '90 days'
         GROUP BY
@@ -49,7 +51,7 @@ class DatabaseQueries:
                 "Vendor",
                 SUM("Cost") as "CurrentMonthCost"
             FROM
-                summary_table 
+                summary_table
             WHERE
                 date_trunc('month', "Invoice Date"::date) = date_trunc('month', current_date)
             GROUP BY
@@ -60,7 +62,7 @@ class DatabaseQueries:
                 "Vendor",
                 SUM("Cost") as "PreviousMonthCost"
             FROM
-                summary_table 
+                summary_table
             WHERE
                 date_trunc('month', "Invoice Date"::date) = date_trunc('month', current_date - interval '1 month')
             GROUP BY
@@ -105,9 +107,9 @@ class DatabaseQueries:
             "Service Name",
             "Usage Family",
             SUM("Cost") as "TotalCost",
-            "Vendor" 
+            "Vendor"
         FROM
-            summary_table 
+            summary_table
         WHERE
             "Invoice Date"::date > current_date - interval '30 days'
         GROUP BY
@@ -125,8 +127,8 @@ class DatabaseQueries:
             "Invoice Date"::date AS "Date",
             SUM("Cost") AS "DailyCost",
             "Vendor"
-        FROM 
-            summary_table 
+        FROM
+            summary_table
         WHERE
             "Invoice Date"::date >= current_date - interval '60 days'
         GROUP BY

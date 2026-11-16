@@ -1,6 +1,7 @@
 from gcp.generate import GCPGenerator
 from gcp.load import GCPLoader
 
+
 class GCP:
     def __init__(self, date):
         self.date = date

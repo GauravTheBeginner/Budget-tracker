@@ -1,6 +1,7 @@
-import logging
 import csv
+import logging
 from io import StringIO
+
 from lib.database import DatabaseHelper
 
 logging.basicConfig(
@@ -20,7 +21,7 @@ logging.basicConfig(
 #         if not dbHelper.engine:
 #             logging.error("Engine creation failed.")
 #             return
-    
+
 #         df.to_sql(table_name, con=dbHelper.engine, if_exists="append" if not overwrite else "replace", index=False)
 #         logging.info(f"Data from {table_name} loaded into table {table_name}..!")
 

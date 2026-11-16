@@ -1,7 +1,10 @@
+import logging
+
 import pandas as pd
+
 from lib.db_helper import load_df_to_table
 from summary.load import SummaryTableLoader
-import logging
+
 
 class AWSLoader:
     def __init__(self, data):
@@ -13,7 +16,7 @@ class AWSLoader:
             return pd.DataFrame()
 
         df = pd.DataFrame(data)
-        
+
         # Rename columns for consistency
         df.rename(columns={
             "invoice_date": "Invoice Date",
@@ -64,7 +67,7 @@ class AWSLoader:
 
                 if not df.empty:
                     load_df_to_table(config["table"], df)
-                    
+
                     # Call extra processing for summary table if applicable
                     if config["extra_processing"]:
                         config["extra_processing"](df)

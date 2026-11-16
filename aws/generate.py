@@ -1,7 +1,9 @@
-import random
 import datetime
+import random
+
 from lib.consts import USAGE_FAM_MAPPING
 from lib.faker_helper import FakerClient
+
 
 class AWSGenerator:
     def __init__(self, date: datetime.date):
@@ -20,7 +22,7 @@ class AWSGenerator:
         data = []
 
         for i in range(days):
-            daily_date = self.date - datetime.timedelta(days=i) 
+            daily_date = self.date - datetime.timedelta(days=i)
             daily_data, total_cost = [], 0
 
             while len(daily_data) < 50 or total_cost < 5000:
@@ -40,7 +42,7 @@ class AWSGenerator:
                 })
 
                 if total_cost >= 8000:
-                    break 
+                    break
 
             data.extend(daily_data)
 

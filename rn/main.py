@@ -2,6 +2,7 @@
 from rn.generate import RNGenerator
 from rn.load import RNLoader
 
+
 class RN:
     def __init__(self, date):
         self.date = date

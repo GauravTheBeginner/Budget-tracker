@@ -1,0 +1,12 @@
+# Ruff linter config — https://docs.astral.sh/ruff/
+target-version = "py310"
+line-length = 120
+
+[lint]
+# E/W = pycodestyle, F = pyflakes (unused imports, undefined names), I = import sorting
+select = ["E", "W", "F", "I"]
+
+[lint.per-file-ignores]
+# Big lookup tables of real service names / long SQL — wrapping them hurts readability
+"lib/consts.py" = ["E501"]
+"precomputation/database_queries.py" = ["E501"]

@@ -1,5 +1,6 @@
-from azure.load import AzureLoader
 from azure.generate import AzureExtractor
+from azure.load import AzureLoader
+
 
 class Azure:
     def __init__(self, date):

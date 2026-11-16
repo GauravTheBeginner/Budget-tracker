@@ -1,5 +1,5 @@
-from summary.load import SummaryTableLoader
 from summary.extract import SummaryTableExtractor
+from summary.load import SummaryTableLoader
 
 
 class SummaryTable:
